@@ -2,27 +2,31 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"strings"
 )
 
 func main() {
 
-	godur,_ := time.ParseDuration("5ms")
+	phrase := "well then let it be let me take face the heat";
 
-	go func (){
-		for i := 0; i < 100; i++ {
-			fmt.Println("hello")
-			time.Sleep(godur)
-		}
-	}()
+	words := strings.Split(phrase, " ")
 
-	go func (){
-		for i := 0; i < 100; i++ {
-			fmt.Println("go")
-			time.Sleep(godur)
-		}
-	}()
+	ch := make(chan string, len(words))
 
-	dur,_ := time.ParseDuration("5s")
-	time.Sleep(dur)
+	for _, word := range words {
+		ch <- word
+	}
+
+	close(ch)
+
+	for msg := range ch {
+		fmt.Println(msg)
+	}
+	//for {
+	//	if msg, ok := <- ch; ok {
+	//		fmt.Println(msg)
+	//	}else {
+	//		break
+	//	}
+	//}
 }
